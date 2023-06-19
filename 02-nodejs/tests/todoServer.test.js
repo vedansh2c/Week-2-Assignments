@@ -46,6 +46,7 @@ describe('Todo API', () => {
         const response = JSON.parse(data);
         expect(response.id).toBeTruthy();
         createdTodoId = response.id;
+        // console.log(createdTodoId);
         done();
       });
     });

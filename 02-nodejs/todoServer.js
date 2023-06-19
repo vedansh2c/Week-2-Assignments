@@ -41,9 +41,48 @@
  */
 const express = require('express');
 const bodyParser = require('body-parser');
-
 const app = express();
-
 app.use(bodyParser.json());
+app.use(express.urlencoded(extended=false))
 
+const todo =[];
+
+
+app.route('/todos')
+.get((req,res)=>{
+  if(todo.length===0)res.status(200).send([{}]);
+  else res.status(200).send(todo);;
+})
+.post((req,res)=>{
+  const task=req.body;
+  todo.push({...task,id:todo.length+1});
+  res.status(201).send({id:todo.length});
+})
+
+app.route('/todos/:id')
+.get((req,res)=>{
+  const id=(req.params.id);
+  if(todo[id-1]!=undefined)res.status(200).send(todo[id-1]);
+  else res.status(404).send("Not Found");
+})
+.put((req,res)=>{
+  const task=req.body;
+  const id=req.params.id;
+  if(todo[id-1]!=undefined){
+    todo[id-1]=task
+    res.status(200).send("Updated");
+  }
+  
+  else res.status(404).send("Not Found");
+})
+.delete((req,res)=>{
+  const id=req.params.id;
+  if(todo[id-1]!=undefined){
+    todo.splice(id-1,1)
+    res.status(200).send("Deleted");
+  }
+  else res.status(404).send("Not Found");
+})
+
+// app.listen(3000,()=>{console.log("Server started")});
 module.exports = app;
