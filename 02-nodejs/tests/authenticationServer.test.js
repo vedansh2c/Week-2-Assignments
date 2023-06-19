@@ -57,6 +57,7 @@ describe('API Tests', () => {
     expect(response.body).toBeDefined();
 
     const responseBody = JSON.parse(response.body);
+    console.log(requestBody);
     expect(responseBody.email).toBe(email);
     expect(responseBody.firstName).toBe(firstName);
     expect(responseBody.lastName).toBe(lastName);

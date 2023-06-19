@@ -32,6 +32,51 @@
 const express = require("express")
 const PORT = 3000;
 const app = express();
-// write your logic here, DONT WRITE app.listen(3000) when you're running tests, the tests will automatically start the server
+const { v4: uuidv4 } = require('uuid');
+app.use(express.json());
+// app.use(express.urlencoded({extended:false}));
+// write your logic here, DONT WRITE app.listen(3000) when you're running tests, the tests will automatically start the server.
+
+const users=[];
+
+app.post('/signup',(req,res)=>{
+  const user=req.body;
+  
+  const finduser=users.find(u=>u.username===user.username);
+
+  if(finduser)res.status(400).send("Username already exists");
+  else{
+    users.push(user);
+    res.status(201).send("Signup successful");
+  }
+});
+
+app.post('/login',(req,res)=>{
+  const {email,password}=req.body;
+  let user=users.find(u=>u.email===email && u.password===password);
+
+  if(user){
+    res.status(200).send({...user,token:uuidv4()});
+  }
+  else{
+    res.status(401).send("Unauthorized");
+  }
+});
+app.get('/data',(req,res)=>{
+  const {username,password}=req.headers;
+  let user=users.find(u=>u.username===username && u.password===password)
+  if(user){
+    res.status(200).send({users});
+  }
+  else{
+    res.status(401).send("Unauthorized");
+  }
+});
+
+
+// app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+
+
 
 module.exports = app;
